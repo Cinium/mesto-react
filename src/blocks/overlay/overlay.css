@@ -1,0 +1,9 @@
+.overlay {
+    background-color: rgba(0, 0, 0, .5);
+    z-index: -1;
+    position: fixed;
+}
+
+.overlay.popup-image__overlay {
+    background-color: rgba(0, 0, 0, .9);
+}
