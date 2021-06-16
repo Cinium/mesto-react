@@ -13,7 +13,7 @@
 }
 
 :root {
-    background-color: black
+    background-color: black;
 }
 
 @media screen and (max-width: 424px) {
