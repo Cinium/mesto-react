@@ -9,7 +9,7 @@ import CurrentUserContext from '../contexts/CurrentUserContext'
 
 
 function Main (props) {
-    const user = React.useContext(CurrentUserContext);
+    const currentUser = React.useContext(CurrentUserContext);
 
     const [cards, setCards] = React.useState([])
 
@@ -20,23 +20,33 @@ function Main (props) {
             })
             .catch(err => console.log(err))
     }, [])
+
+    function handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        
+        // Отправляем запрос в API и получаем обновлённые данные карточки
+        api.changeLikeCardStatus(card._id, isLiked)
+            .then((newCard) => {
+                setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        });
+    }
     
 
     return (
         <main>
         <section className="profile">
             <button onClick={props.onEditAvatar} className="profile__edit-avatar-button">
-                <img src={user.avatar} alt="фото пользователя" className="profile__user-pic" />
+                <img src={currentUser.avatar} alt="фото пользователя" className="profile__user-pic" />
                 <img src={editAvatarIcon} className="profile__edit-avatar-icon" alt="иконка карандаша" />
             </button>
             <div className="profile__user-info">
                 <div className="profile__name-and-button-container">
-                    <h1 className="profile__user-name">{user.name}</h1>
+                    <h1 className="profile__user-name">{currentUser.name}</h1>
                     <button onClick={props.onEditProfile} className="profile__edit-button button" type="button">
                         <img src={editIcon} className="profile__edit-button-icon" alt="иконка карандаша" />
                     </button>
                 </div>
-                <p className="profile__user-job">{user.about}</p>
+                <p className="profile__user-job">{currentUser.about}</p>
             </div>
             <button onClick={props.onAddPlace} className="profile__add-button button" type="button">
                 <img src={addButtonIcon} className="profile__add-button-icon" alt="иконка плюсика" />
@@ -44,7 +54,7 @@ function Main (props) {
         </section>
         <section className="elements">
             {cards.map((card) => 
-                (<Card key={card._id} card={card} onCardClick={props.onCardClick} />)
+                (<Card onCardLike={handleCardLike} key={card._id} card={card} onCardClick={props.onCardClick} />)
             )}
         </section>
     </main>
