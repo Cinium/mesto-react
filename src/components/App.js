@@ -4,6 +4,8 @@ import Main from './Main.js'
 import Footer from './Footer.js'
 import PopupWithForm from './PopupWithForm'
 import ImagePopup from './ImagePopup'
+import api from '../utils/Api'
+import CurrentUserContext from '../contexts/CurrentUserContext'
 import '../index.css'
 
 function App() {
@@ -13,7 +15,16 @@ function App() {
   const [isEditAvatarPopupOpen, setEditAvatarState] = React.useState(false)
   const [isImagePopupOpen, setImagePopupState] = React.useState(false)
 
-  const[selectedCard, setSelectedCard] = React.useState({})
+  const [selectedCard, setSelectedCard] = React.useState({})
+
+  const [currentUser, setCurrentUser] = React.useState({})
+
+  React.useEffect(() => {
+    api.getUserData()
+      .then(res => {
+        setCurrentUser(res)
+      })
+  }, [])
 
   function handleEditAvatarClick() {
     setEditAvatarState(true)
@@ -44,6 +55,7 @@ function App() {
 
   return (
     <div className="page">
+      <CurrentUserContext.Provider value={currentUser}>
       <Header />
       <Main onEditProfile={handleEditProfileClick}
             onEditAvatar={handleEditAvatarClick}
@@ -80,6 +92,7 @@ function App() {
         <button className="popup__submit" type="submit" >Сохранить</button>  
       </ PopupWithForm>
       <Footer />
+      </CurrentUserContext.Provider>
     </div>
   );
 }
