@@ -4,7 +4,6 @@ import addButtonIcon from '../images/add-button.svg';
 import editAvatarIcon from '../images/editavataricon.svg';
 import editIcon from '../images/edit-button.svg';
 import Card from '../components/Card'
-import api from '../utils/Api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 
 
