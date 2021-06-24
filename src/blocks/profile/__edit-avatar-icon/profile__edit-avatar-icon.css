@@ -2,5 +2,6 @@
     position: absolute;
     top: 47px;
     left: 47px;
-    z-index: -1;
+    opacity: 0;
+    transition: .2s;
 }

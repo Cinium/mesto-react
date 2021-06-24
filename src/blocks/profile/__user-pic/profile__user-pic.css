@@ -3,19 +3,10 @@
     height: 120px;
     object-fit: cover;
     border-radius: 100%;
-    margin-right: 30px;
     transition: .2s;
 }
 
-.profile__user-pic:hover {
-    opacity: .2;
-    cursor: pointer;
-    
-}
 
-.profile__user-pic:hover ~ .profile__edit-avatar-icon {
-    opacity: 1;
-}
 
 @media screen and (max-width: 1023px) {
     .profile__user-pic {

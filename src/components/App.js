@@ -4,6 +4,8 @@ import Main from './Main.js'
 import Footer from './Footer.js'
 import PopupWithForm from './PopupWithForm'
 import ImagePopup from './ImagePopup'
+import EditProfilePopup from './EditProfilePopup'
+import EditAvatarPopup from './EditAvatarPopup'
 import api from '../utils/Api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
 import '../index.css'
@@ -25,6 +27,34 @@ function App() {
         setCurrentUser(res)
       })
   }, [])
+
+  const [cards, setCards] = React.useState([])
+
+    React.useEffect(() => {
+        api.getInitialCards()
+            .then(res => {
+                setCards(res)
+            })
+            .catch(err => console.log(err))
+    }, [])
+
+    function handleCardLike(card) {
+        const isLiked = card.likes.some(i => i._id === currentUser._id);
+        
+        api.changeLikeCardStatus(card._id, isLiked)
+            .then((newCard) => {
+                setCards((state) => state.map((c) => c._id === card._id ? newCard : c));
+        });
+    }
+
+    function handleCardDelete(card) {
+        api.deleteCard(card._id)
+            .then(otvet => {
+                setCards(
+                    cards.filter(c => !(c._id === card._id))
+                )
+            })
+    }
 
   function handleEditAvatarClick() {
     setEditAvatarState(true)
@@ -51,6 +81,24 @@ function App() {
     setImagePopupState(false)
   }
 
+  function handleUpdateUser(userData) {
+    api.patchUserInfo(userData)
+      .then((res) => {
+        setCurrentUser(res)
+
+        closeAllPopups()
+      })
+  }
+
+  function handleUpdateAvatar(avatarLink) {
+    api.patchUserPic(avatarLink)
+      .then(res => {
+        setCurrentUser(res)
+
+        closeAllPopups()
+      })
+  }
+
   
 
   return (
@@ -61,8 +109,15 @@ function App() {
             onEditAvatar={handleEditAvatarClick}
             onAddPlace={handleAddPlaceClick}
             onCardClick={handleCardClick}
+            cards={cards}
+            onCardLike={handleCardLike}
+            onCardDelete={handleCardDelete}
       />
       <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
+
+      <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+
+      <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
 
       <PopupWithForm name='add' title='Новое место' onClose={closeAllPopups} isOpen={isAddPlacePopupOpen} >
         <input id="place-input" className="popup__input popup__input_type_place" type="text" name="name" placeholder="Название" minLength="2" maxLength="30" defaultValue="" required />
@@ -73,24 +128,11 @@ function App() {
 
           <button className="popup__submit" type="submit" >Создать</button>
       </ PopupWithForm>
-      <PopupWithForm name='edit' title='Редактировать профиль' onClose={closeAllPopups} isOpen={isEditProfilePopupOpen}>
-        <input id="name-input" placeholder="Имя" className="popup__input popup__input_type_name" minLength="2" maxLength="40" type="text" name="name" defaultValue="Жак-Ив Кусто" required />
-        <span className="popup__error name-input-error"></span>
-
-        <input id="job-input" placeholder="Вид деятельности" className="popup__input popup__input_type_job" minLength="2" maxLength="200" type="text" name="about" defaultValue="Исследователь океана" required />
-        <span className="popup__error job-input-error"></span>
-
-        <button className="popup__submit" type="submit">Сохранить</button>
-      </ PopupWithForm>
       
       <PopupWithForm name='submit' title='Вы уверены?' onClose={closeAllPopups}>
         <button className="popup__submit" type="submit" >Да</button>  
       </ PopupWithForm>
-      <PopupWithForm name='avatar' title='Обновить аватар' onClose={closeAllPopups} isOpen={isEditAvatarPopupOpen}>
-        <input id="avatar-input" className="popup__input popup__input_type_avatar" type="url" name="link" placeholder="Ссылка на картинку" defaultValue="" required />
-        <span className="popup__error avatar-input-error"></span>
-        <button className="popup__submit" type="submit" >Сохранить</button>  
-      </ PopupWithForm>
+      
       <Footer />
       </CurrentUserContext.Provider>
     </div>

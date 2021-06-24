@@ -6,4 +6,15 @@
     background-color: transparent;
     position: relative;
     outline: none;
+    margin-right: 30px;
+}
+
+.profile__edit-avatar-button:hover .profile__user-pic {
+    opacity: .2;
+    cursor: pointer;
+}
+
+.profile__edit-avatar-button:hover .profile__edit-avatar-icon {
+    opacity: 1;
+    cursor: pointer;
 }
