@@ -9,7 +9,7 @@ function PopupWithForm(props) {
                     {props.children}
                 </form>
             </div>
-            <div className={`overlay ${props.isOpen ? 'overlay_opened' : ''}`}></div>
+            <div onClick={props.onClose} className={`overlay ${props.isOpen ? 'overlay_opened' : ''}`}></div>
         </div>
     )
 }

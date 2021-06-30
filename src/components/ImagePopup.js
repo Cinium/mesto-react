@@ -6,7 +6,7 @@ function ImagePopup(props) {
                 <img className="popup__image" alt="фото места" src={props.card.link} />
                 <figcaption className="popup__image-title">{props.card.name}</figcaption>
             </figure>
-            <div className={`popup-image__overlay overlay ${props.isOpen ? 'overlay_opened' : ''}`}></div>
+            <div onClick={props.onClose} className={`popup-image__overlay overlay ${props.isOpen ? 'overlay_opened' : ''}`}></div>
         </div>
     )
 }
