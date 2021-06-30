@@ -2,7 +2,7 @@ import React from 'react'
 import Header from './Header.js'
 import Main from './Main.js'
 import Footer from './Footer.js'
-import PopupWithForm from './PopupWithForm'
+import SubmitPopup from './SubmitPopup'
 import ImagePopup from './ImagePopup'
 import EditProfilePopup from './EditProfilePopup'
 import EditAvatarPopup from './EditAvatarPopup'
@@ -19,6 +19,7 @@ function App() {
   const [isAddPlacePopupOpen, setAddPlaceState] = React.useState(false)
   const [isEditAvatarPopupOpen, setEditAvatarState] = React.useState(false)
   const [isImagePopupOpen, setImagePopupState] = React.useState(false)
+  const [isSubmitPopupOpen, setSubmitPopupState] = React.useState(false)
   // стейт выбранной карточки
   const [selectedCard, setSelectedCard] = React.useState({})
   // стейт текущего юзера
@@ -62,21 +63,22 @@ function App() {
 
   // обработчик клика на кнопку добавления карточки
   function handleAddPlaceClick() {
-    setAddPlaceState(true)
+    setAddPlaceState(true);
   }
 
   // обработчик клика на картинку карточки
   function handleCardClick(card) {
-    setSelectedCard(card)
-    setImagePopupState(true)
+    setSelectedCard(card);
+    setImagePopupState(true);
   }
 
   // закрыть все попапы
   function closeAllPopups() {
-    setEditAvatarState(false)
+    setEditAvatarState(false);
     setEditProfileState(false);
-    setAddPlaceState(false)
-    setImagePopupState(false)
+    setAddPlaceState(false);
+    setImagePopupState(false);
+    setSubmitPopupState(false);
   }
 
   // обработчик лайка
@@ -96,8 +98,17 @@ function App() {
         setCards(
           cards.filter(c => !(c._id === card._id))
         )
+        closeAllPopups();
       })
     }
+
+  function handleDeleteConfirmation(card) {
+    closeAllPopups();
+
+    setSelectedCard(card);
+
+    setSubmitPopupState(true);
+  }
 
   // обработчик изменения информации пользователя
   function handleUpdateUser(userData) {
@@ -140,7 +151,7 @@ function App() {
               onCardClick={handleCardClick}
               cards={cards}
               onCardLike={handleCardLike}
-              onCardDelete={handleCardDelete}
+              onCardDelete={handleDeleteConfirmation}
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
 
@@ -150,9 +161,7 @@ function App() {
 
         <AddPlacePopup onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
       
-        <PopupWithForm name='submit' title='Вы уверены?' onClose={closeAllPopups}>
-          <button className="popup__submit" type="submit" >Да</button>  
-        </ PopupWithForm>
+        <SubmitPopup card={selectedCard} onConfirm={handleCardDelete} isOpen={isSubmitPopupOpen} onClose={closeAllPopups} />
       
         <Footer />
       </CurrentUserContext.Provider>
