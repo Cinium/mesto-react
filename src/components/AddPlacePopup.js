@@ -23,14 +23,14 @@ export default function AddPlacePopup(props) {
       }
 
     return(
-        <PopupWithForm onSubmit={handleSubmit} name='add' title='Новое место' onClose={props.onClose} isOpen={props.isOpen} >
+        <PopupWithForm onSubmit={handleSubmit} name='add' title='Новое место' isLoading={props.isLoading} onClose={props.onClose} isOpen={props.isOpen} >
             <input onChange={handlePlaceInputChange} id="place-input" className="popup__input popup__input_type_place" type="text" name="name" placeholder="Название" minLength="2" maxLength="30" defaultValue="" required />
             <span className="popup__error place-input-error"></span>
 
             <input onChange={handleLinkInputChange} id="link-input" className="popup__input popup__input_type_link" type="url" name="link" placeholder="Ссылка на картинку" defaultValue="" required />
             <span className="popup__error link-input-error"></span>
 
-            <button className="popup__submit" type="submit" >Создать</button>
+            <button className="popup__submit" type="submit" >{props.isLoading ? ('Сохранение...') : ('Создать')}</button>
       </ PopupWithForm>
     )
 }

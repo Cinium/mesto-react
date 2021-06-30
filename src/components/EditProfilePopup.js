@@ -39,7 +39,7 @@ export default function EditProfilePopup(props) {
             <input onChange={handleDescriptionInputChange} id="job-input" placeholder="Вид деятельности" className="popup__input popup__input_type_job" minLength="2" maxLength="200" type="text" name="about" defaultValue={description} required />
             <span className="popup__error job-input-error"></span>
 
-            <button className="popup__submit" type="submit">Сохранить</button>
+            <button className="popup__submit" type="submit">{props.isLoading ? ('Сохранение...') : ('Сохранить')}</button>
       </ PopupWithForm>
     )
 }

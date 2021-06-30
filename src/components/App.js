@@ -14,12 +14,18 @@ import '../index.css'
 function App() {
   // *** СТЕЙТЫ *** 
 
-  // стейты попапов
+  // стейты видимости попапов
   const [isEditProfilePopupOpen, setEditProfileState] = React.useState(false)
   const [isAddPlacePopupOpen, setAddPlaceState] = React.useState(false)
   const [isEditAvatarPopupOpen, setEditAvatarState] = React.useState(false)
   const [isImagePopupOpen, setImagePopupState] = React.useState(false)
   const [isSubmitPopupOpen, setSubmitPopupState] = React.useState(false)
+
+  const [isPlaceAdding, setAddPopupLoading] = React.useState(false)
+  const [isAvatarEditing, setAvatarPopupLoading] = React.useState(false)
+  const [isProfileEditing, setEditPopupLoading] = React.useState(false)
+  const [isConfirming, setSubmitPopupLoading] = React.useState(false)
+
   // стейт выбранной карточки
   const [selectedCard, setSelectedCard] = React.useState({})
   // стейт текущего юзера
@@ -93,15 +99,20 @@ function App() {
 
   // обработчик удаления карточки
   function handleCardDelete(card) {
+    setSubmitPopupLoading(true)
+
     api.deleteCard(card._id)
-      .then(otvet => {
+      .then(() => {
         setCards(
           cards.filter(c => !(c._id === card._id))
         )
         closeAllPopups();
       })
+      .catch(err => console.log(err))
+      .finally(() => setSubmitPopupLoading(false))
     }
-
+  
+  // обработчик подтверждения удаления карточки
   function handleDeleteConfirmation(card) {
     closeAllPopups();
 
@@ -112,32 +123,44 @@ function App() {
 
   // обработчик изменения информации пользователя
   function handleUpdateUser(userData) {
+    setEditPopupLoading(true)
+
     api.patchUserInfo(userData)
       .then((res) => {
         setCurrentUser(res)
 
         closeAllPopups()
       })
+      .catch(err => console.log(err))
+      .finally(() => setEditPopupLoading(false))
   }
 
   // обработчик изменения аватара
   function handleUpdateAvatar(avatarLink) {
+    setAvatarPopupLoading(true)
+
     api.patchUserPic(avatarLink)
       .then(res => {
         setCurrentUser(res)
 
         closeAllPopups()
       })
+      .catch(err => console.log(err))
+      .finally(() => setAvatarPopupLoading(false))
   }
 
   // обработчик добавления карточки
   function handleAddPlaceSubmit(cardData) {
+    setAddPopupLoading(true);
+
     api.postCard(cardData)
       .then(res => {
         setCards([res, ...cards])
 
         closeAllPopups()
       })
+      .catch(err => console.log(err))
+      .finally(() => {setAddPopupLoading(false)})
   }
   
 
@@ -155,13 +178,13 @@ function App() {
         />
         <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
 
-        <EditProfilePopup onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        <EditProfilePopup isLoading={isProfileEditing} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
 
-        <EditAvatarPopup onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+        <EditAvatarPopup isLoading={isAvatarEditing} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
 
-        <AddPlacePopup onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+        <AddPlacePopup isLoading={isPlaceAdding} onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
       
-        <SubmitPopup card={selectedCard} onConfirm={handleCardDelete} isOpen={isSubmitPopupOpen} onClose={closeAllPopups} />
+        <SubmitPopup isLoading={isConfirming} card={selectedCard} onConfirm={handleCardDelete} isOpen={isSubmitPopupOpen} onClose={closeAllPopups} />
       
         <Footer />
       </CurrentUserContext.Provider>

@@ -2,7 +2,7 @@ import React from 'react';
 import PopupWithForm from './PopupWithForm'
 
 export default function SubmitPopup(props) {
-    
+
     function handleSubmit(event) {
         event.preventDefault();
 
@@ -11,7 +11,7 @@ export default function SubmitPopup(props) {
 
     return(
         <PopupWithForm onSubmit={handleSubmit} name='submit' title='Вы уверены?' onClose={props.onClose} isOpen={props.isOpen}>
-          <button className="popup__submit" type="submit" >Да</button>  
+          <button className="popup__submit" type="submit" >{props.isLoading ? ('Подтверждение...') : ('Да')}</button>  
         </ PopupWithForm>
     )
 }
