@@ -7,6 +7,8 @@ function PopupWithForm(props) {
                     <h2 className="popup__title">{props.title}</h2>
                     
                     {props.children}
+
+                    <button className="popup__submit" type="submit" >{props.isLoading ? ('Сохранение...') : (props.buttonText)}</button>
                 </form>
             </div>
             <div onClick={props.onClose} className={`overlay ${props.isOpen ? 'overlay_opened' : ''}`}></div>

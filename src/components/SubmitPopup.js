@@ -10,8 +10,12 @@ export default function SubmitPopup(props) {
     }
 
     return(
-        <PopupWithForm onSubmit={handleSubmit} name='submit' title='Вы уверены?' onClose={props.onClose} isOpen={props.isOpen}>
-          <button className="popup__submit" type="submit" >{props.isLoading ? ('Подтверждение...') : ('Да')}</button>  
+        <PopupWithForm buttonText={props.buttonText}
+                       onSubmit={handleSubmit}
+                       name='submit'
+                       title='Вы уверены?'
+                       onClose={props.onClose}
+                       isOpen={props.isOpen}>
         </ PopupWithForm>
     )
 }

@@ -27,7 +27,7 @@ function Card(props) {
             <button onClick={handleDeleteClick} className={`element__delete-button ${!isOwn ? 'element__delete-button_hidden' : ''}`}>
                 <img src={deleteIcon} alt="удалить" className="element__delete-icon" />
             </button>
-            <div className="element__image" alt="изображение" onClick={handleClick} style={{ backgroundImage: `url(${props.card.link})` }}/>
+            <div className="element__image" onClick={handleClick} style={{ backgroundImage: `url(${props.card.link})` }}/>
             <div className="element__container">
                 <h2 className="element__title">{props.card.name}</h2>      
                 <div className="element__likes-container">

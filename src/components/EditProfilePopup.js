@@ -32,14 +32,35 @@ export default function EditProfilePopup(props) {
       }
 
     return(
-        <PopupWithForm onSubmit={handleSubmit} name='edit' title='Редактировать профиль' onClose={props.onClose} isOpen={props.isOpen}>
-            <input onChange={handleNameInputChange} id="name-input" placeholder="Имя" className="popup__input popup__input_type_name" minLength="2" maxLength="40" type="text" name="name" defaultValue={name} required />
+        <PopupWithForm buttonText={props.buttonText}
+                       onSubmit={handleSubmit}
+                       name='edit'
+                       title='Редактировать профиль'
+                       onClose={props.onClose}
+                       isOpen={props.isOpen}>
+            <input onChange={handleNameInputChange}
+                   id="name-input"
+                   placeholder="Имя"
+                   className="popup__input popup__input_type_name"
+                   minLength="2"
+                   maxLength="40"
+                   type="text"
+                   name="name"
+                   value={name}
+                   required />
             <span className="popup__error name-input-error"></span>
 
-            <input onChange={handleDescriptionInputChange} id="job-input" placeholder="Вид деятельности" className="popup__input popup__input_type_job" minLength="2" maxLength="200" type="text" name="about" defaultValue={description} required />
+            <input onChange={handleDescriptionInputChange} 
+                   id="job-input"
+                   placeholder="Вид деятельности"
+                   className="popup__input popup__input_type_job"
+                   minLength="2"
+                   maxLength="200"
+                   type="text"
+                   name="about"
+                   value={description}
+                   required />
             <span className="popup__error job-input-error"></span>
-
-            <button className="popup__submit" type="submit">{props.isLoading ? ('Сохранение...') : ('Сохранить')}</button>
       </ PopupWithForm>
     )
 }

@@ -82,28 +82,15 @@ class Api {
             .then(res => this._getResponse(res))
     }
 
+    // махинации с лайком
     changeLikeCardStatus(cardId, isLiked) {
-        // елси карточка лайкнута
-        if (isLiked) {
-            // запрос на удаление лайка
-            return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-                method: 'DELETE',
-                headers: {
-                    authorization: this._token,
-                },
-            })
-                .then(res => this._getResponse(res))
-        // иначе
-        } else {
-            // запрос на постановку лайка
-            return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
-                method: 'PUT',
-                headers: {
-                    authorization: this._token,
-                },
-            })
-                .then(res => this._getResponse(res))
-        }
+        return fetch(`${this._baseUrl}/cards/likes/${cardId}`, {
+            method: isLiked ? "DELETE" : "PUT",
+            headers: {
+                authorization: this._token,
+            },
+        })
+            .then(res => this._getResponse(res))
     }
 
 

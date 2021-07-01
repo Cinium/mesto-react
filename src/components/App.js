@@ -9,7 +9,7 @@ import EditAvatarPopup from './EditAvatarPopup'
 import AddPlacePopup from './AddPlacePopup'
 import api from '../utils/api'
 import CurrentUserContext from '../contexts/CurrentUserContext'
-import '../index.css'
+
 
 function App() {
   // *** СТЕЙТЫ *** 
@@ -21,6 +21,7 @@ function App() {
   const [isImagePopupOpen, setImagePopupState] = React.useState(false)
   const [isSubmitPopupOpen, setSubmitPopupState] = React.useState(false)
 
+  // стейты индикации загрузки
   const [isPlaceAdding, setAddPopupLoading] = React.useState(false)
   const [isAvatarEditing, setAvatarPopupLoading] = React.useState(false)
   const [isProfileEditing, setEditPopupLoading] = React.useState(false)
@@ -36,19 +37,14 @@ function App() {
 
   // *** ЭФФЕКТЫ ***
 
-  // эффект с получением данных пользователя
   React.useEffect(() => {
-    api.getUserData()
+    Promise.all([api.getUserData(), api.getInitialCards()])
       .then(res => {
-        setCurrentUser(res)
-      })
-  }, [])
+        // получение данных пользователя
+        setCurrentUser(res[0])
 
-  // эффект с получением карточек
-  React.useEffect(() => {
-    api.getInitialCards()
-      .then(res => {
-        setCards(res)
+        // рендеринг набора карточек
+        setCards(res[1])
       })
       .catch(err => console.log(err))
   }, [])
@@ -104,7 +100,7 @@ function App() {
     api.deleteCard(card._id)
       .then(() => {
         setCards(
-          cards.filter(c => !(c._id === card._id))
+          cards.filter(c => c._id !== card._id)
         )
         closeAllPopups();
       })
@@ -144,6 +140,8 @@ function App() {
         setCurrentUser(res)
 
         closeAllPopups()
+
+        avatarLink = '';
       })
       .catch(err => console.log(err))
       .finally(() => setAvatarPopupLoading(false))
@@ -176,15 +174,38 @@ function App() {
               onCardLike={handleCardLike}
               onCardDelete={handleDeleteConfirmation}
         />
-        <ImagePopup card={selectedCard} onClose={closeAllPopups} isOpen={isImagePopupOpen} />
+        <ImagePopup card={selectedCard}
+                    onClose={closeAllPopups}
+                    isOpen={isImagePopupOpen}
+        />
 
-        <EditProfilePopup isLoading={isProfileEditing} onUpdateUser={handleUpdateUser} isOpen={isEditProfilePopupOpen} onClose={closeAllPopups} />
+        <EditProfilePopup buttonText={`Сохранить`}
+                          isLoading={isProfileEditing}
+                          onUpdateUser={handleUpdateUser}
+                          isOpen={isEditProfilePopupOpen}
+                          onClose={closeAllPopups}
+        />
 
-        <EditAvatarPopup isLoading={isAvatarEditing} onUpdateAvatar={handleUpdateAvatar} isOpen={isEditAvatarPopupOpen} onClose={closeAllPopups} />
+        <EditAvatarPopup buttonText={`Сохранить`}
+                         isLoading={isAvatarEditing} onUpdateAvatar={handleUpdateAvatar}
+                         isOpen={isEditAvatarPopupOpen}
+                         onClose={closeAllPopups}
+        />
 
-        <AddPlacePopup isLoading={isPlaceAdding} onAddPlace={handleAddPlaceSubmit} isOpen={isAddPlacePopupOpen} onClose={closeAllPopups} />
+        <AddPlacePopup buttonText={`Создать`}
+                       isLoading={isPlaceAdding}
+                       onAddPlace={handleAddPlaceSubmit}
+                       isOpen={isAddPlacePopupOpen}
+                       onClose={closeAllPopups}
+        />
       
-        <SubmitPopup isLoading={isConfirming} card={selectedCard} onConfirm={handleCardDelete} isOpen={isSubmitPopupOpen} onClose={closeAllPopups} />
+        <SubmitPopup buttonText={`Да`}
+                     isLoading={isConfirming}
+                     card={selectedCard}
+                     onConfirm={handleCardDelete}
+                     isOpen={isSubmitPopupOpen}
+                     onClose={closeAllPopups}
+        />
       
         <Footer />
       </CurrentUserContext.Provider>
